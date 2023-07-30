@@ -1,0 +1,650 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode$for(hyperrefoptions)$,$hyperrefoptions$$endfor$}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+$if(colorlinks)$
+  \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+$endif$       $-- %%% colorlinks
+$if(CJKmainfont)$
+  \PassOptionsToPackage{space}{xeCJK}
+$endif$       $-- %%% CJKmainfont
+%
+\documentclass[
+$if(fontsize)$
+  ~~$fontsize$,
+$endif$       $-- %%% fontsize
+$if(papersize)$
+  ~~$papersize$paper,
+$endif$       $-- %%% papersize
+$if(beamer)$
+  ~~ignorenonframetext,
+  $if(handout)$
+    ~~handout,
+  $endif$     $-- %%% handout
+  $if(aspectratio)$
+    ~~aspectratio=$aspectratio$,
+  $endif$     $-- %%% aspectratio
+$endif$       $-- %%% beamer
+$for(classoption)$
+  ~~$classoption$$sep$,
+$endfor$      $-- %%% classoption
+]{$documentclass$}
+$if(beamer)$
+  $if(background-image)$
+    \usebackgroundtemplate{%
+    ~~\includegraphics[width=\paperwidth]{$background-image$}%
+    }
+    % In beamer background-image does not work well when other images are used, so this is the workaround
+    \pgfdeclareimage[width=\paperwidth,height=\paperheight]{background}{$background-image$}
+    \usebackgroundtemplate{\pgfuseimage{background}}
+  $endif$     $-- %%% background-image
+  \usepackage{pgfpages}
+  \setbeamertemplate{caption}[numbered]
+  \setbeamertemplate{caption label separator}{: }
+  \setbeamercolor{caption name}{fg=normal text.fg}
+  \beamertemplatenavigationsymbols$if(navigation)$$navigation$$else$empty$endif$
+  $for(beameroption)$
+    \setbeameroption{$beameroption$}
+  $endfor$    $-- %%% beameroption
+  % Prevent slide breaks in the middle of a paragraph
+  \widowpenalties 1 10000
+  \raggedbottom
+  $if(section-titles)$
+    \setbeamertemplate{part page}{
+    ~~\centering
+    ~~\begin{beamercolorbox}[sep=16pt,center]{part title}
+    ~~~~\usebeamerfont{part title}\insertpart\par
+    ~~\end{beamercolorbox}
+    }
+    \setbeamertemplate{section page}{
+    ~~\centering
+    ~~\begin{beamercolorbox}[sep=12pt,center]{part title}
+    ~~~~\usebeamerfont{section title}\insertsection\par
+    ~~\end{beamercolorbox}
+    }
+    \setbeamertemplate{subsection page}{
+    ~~\centering
+    ~~\begin{beamercolorbox}[sep=8pt,center]{part title}
+    ~~~~\usebeamerfont{subsection title}\insertsubsection\par
+    ~~\end{beamercolorbox}
+    }
+    \AtBeginPart{
+    ~~\frame{\partpage}
+    }
+    \AtBeginSection{
+    ~~\ifbibliography
+    ~~\else
+    ~~~~\frame{\sectionpage}
+    ~~\fi
+    }
+    \AtBeginSubsection{
+    ~~\frame{\subsectionpage}
+    }
+  $endif$     $-- %%% section-titles
+$endif$       $-- %%% beamer
+$if(beamerarticle)$
+  \usepackage{beamerarticle} % needs to be loaded first
+$endif$       $-- %%% beamerarticle
+\usepackage{amsmath,amssymb}
+$if(linestretch)$
+  \usepackage{setspace}
+$endif$       $-- %%% linestretch
+\usepackage{iftex}
+\ifPDFTeX
+~~\usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
+~~\usepackage[utf8]{inputenc}
+~~\usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+$if(mathspec)$
+  ~~\ifXeTeX
+  ~~~~\usepackage{mathspec} % this also loads fontspec
+  ~~\else
+  ~~~~\usepackage{unicode-math} % this also loads fontspec
+  ~~\fi
+$else$        $-- %%% mathspec
+  ~~\usepackage{unicode-math} % this also loads fontspec
+$endif$       $-- %%% mathspec
+~~\defaultfontfeatures{Scale=MatchLowercase}$-- must come before Beamer theme
+~~\defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+$if(fontfamily)$
+$else$        $-- %%% fontfamily
+  $-- Set default font before Beamer theme so the theme can override it
+  \usepackage{lmodern}
+$endif$       $-- %%% fontfamily
+$-- Set Beamer theme before user font settings so they can override theme
+$if(beamer)$
+  $if(theme)$
+    \usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
+  $endif$     $-- %%% theme
+  $if(colortheme)$
+    \usecolortheme{$colortheme$}
+  $endif$     $-- %%% colortheme
+  $if(fonttheme)$
+    \usefonttheme{$fonttheme$}
+  $endif$     $-- %%% fonttheme
+  $if(mainfont)$
+    \usefonttheme{serif} % use mainfont rather than sansfont for slide text
+  $endif$     $-- %%% mainfont
+  $if(innertheme)$
+    \useinnertheme{$innertheme$}
+  $endif$     $-- %%% innertheme
+  $if(outertheme)$
+    \useoutertheme{$outertheme$}
+  $endif$     $-- %%% outertheme
+$endif$       $-- %%% beamer
+$-- User font settings (must come after default font and Beamer theme)
+$if(fontfamily)$
+  \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
+$endif$       $-- %%% fontfamily
+\ifPDFTeX\else
+~~% xetex/luatex font selection
+$if(mainfont)$
+  ~~\setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
+$endif$       $-- %%% mainfont
+$if(sansfont)$
+  ~~\setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$]{$sansfont$}
+$endif$       $-- %%% sansfont
+$if(monofont)$
+  ~~\setmonofont[$for(monofontoptions)$$monofontoptions$$sep$,$endfor$]{$monofont$}
+$endif$       $-- %%% monofont
+$for(fontfamilies)$
+  ~~\newfontfamily{$fontfamilies.name$}[$for(fontfamilies.options)$$fontfamilies.options$$sep$,$endfor$]{$fontfamilies.font$}
+$endfor$      $-- %%% fontfamilies
+$if(mathfont)$
+  $if(mathspec)$
+    ~~\ifXeTeX
+    ~~~~\setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+    ~~\else
+    ~~~~\setmathfont[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+    ~~\fi
+  $else$      $-- %%% mathspec
+    ~~\setmathfont[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+  $endif$     $-- %%% mathspec
+$endif$       $-- %%% mathfont
+$if(CJKmainfont)$
+  ~~\ifXeTeX
+  ~~~~\usepackage{xeCJK}
+  ~~~~\setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+  ~~~~$if(CJKsansfont)$
+  ~~~~~~\setCJKsansfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKsansfont$}
+  ~~~~$endif$
+  ~~~~$if(CJKmonofont)$
+  ~~~~~~\setCJKmonofont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmonofont$}
+  ~~~~$endif$
+  ~~\fi
+$endif$       $-- %%% CJKmainfont
+$if(luatexjapresetoptions)$
+  ~~\ifLuaTeX
+  ~~~~\usepackage[$for(luatexjapresetoptions)$$luatexjapresetoptions$$sep$,$endfor$]{luatexja-preset}
+  ~~\fi
+$endif$       $-- %%% luatexjapresetoptions
+$if(CJKmainfont)$
+  ~~\ifLuaTeX
+  ~~~~\usepackage[$for(luatexjafontspecoptions)$$luatexjafontspecoptions$$sep$,$endfor$]{luatexja-fontspec}
+  ~~~~\setmainjfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+  ~~\fi
+$endif$       $-- %%% CJKmainfont
+\fi
+$if(zero-width-non-joiner)$
+  %% Support for zero-width non-joiner characters.
+  \makeatletter
+  \def\zerowidthnonjoiner{%
+  ~~% Prevent ligatures and adjust kerning, but still support hyphenating.
+  ~~\texorpdfstring{%
+  ~~~~\TextOrMath{\nobreak\discretionary{-}{}{\kern.03em}%
+  ~~~~~~\ifvmode\else\nobreak\hskip\z@skip\fi}{}%
+  ~~}{}%
+  }
+  \makeatother
+  \ifPDFTeX
+  ~~\DeclareUnicodeCharacter{200C}{\zerowidthnonjoiner}
+  \else
+  ~~\catcode`^^^^200c=\active
+  ~~\protected\def ^^^^200c{\zerowidthnonjoiner}
+  \fi
+  %% End of ZWNJ support
+$endif$       $-- %%% zero-width-non-joiner
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+~~\usepackage[$for(microtypeoptions)$$microtypeoptions$$sep$,$endfor$]{microtype}
+~~\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+$if(indent)$
+$else$        $-- %%% indent
+  \makeatletter
+  \@ifundefined{KOMAClassName}{% if non-KOMA class
+  ~~\IfFileExists{parskip.sty}{%
+  ~~~~\usepackage{parskip}
+  ~~}{% else
+  ~~~~\setlength{\parindent}{0pt}
+  ~~~~\setlength{\parskip}{6pt plus 2pt minus 1pt}}
+  }{% if KOMA class
+  ~~\KOMAoptions{parskip=half}}
+  \makeatother
+$endif$       $-- %%% indent
+$if(verbatim-in-note)$
+  \usepackage{fancyvrb}
+$endif$       $-- %%% verbatim-in-note
+\usepackage{xcolor}
+$if(geometry)$
+  $if(beamer)$
+    \geometry{$for(geometry)$$geometry$$sep$,$endfor$}
+  $else$      $-- %%% beamer
+    \usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+  $endif$     $-- %%% beamer
+$endif$       $-- %%% geometry
+$if(beamer)$
+  \newif\ifbibliography
+$endif$       $-- %%% beamer
+$if(listings)$
+  \usepackage{listings}
+  \newcommand{\passthrough}[1]{#1}
+  \lstset{defaultdialect=[5.3]Lua}
+  \lstset{defaultdialect=[x86masm]Assembler}
+$endif$       $-- %%% listings
+$if(lhs)$
+  \lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
+$endif$       $-- %%% lhs
+$if(highlighting-macros)$
+  $highlighting-macros$
+$endif$       $-- %%% highlighting-macros
+$if(tables)$
+  \usepackage{longtable,booktabs,array}
+  $if(multirow)$
+    \usepackage{multirow}
+  $endif$     $-- %%% multirow
+  \usepackage{calc} % for calculating minipage widths
+  $if(beamer)$
+    \usepackage{caption}
+    % Make caption package work with longtable
+    \makeatletter
+    \def\fnum@table{\tablename~\thetable}
+    \makeatother
+  $else$      $-- %%% beamer
+    % Correct order of tables after \paragraph or \subparagraph
+    \usepackage{etoolbox}
+    \makeatletter
+    \patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+    \makeatother
+    % Allow footnotes in longtable head/foot
+    \IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+    \makesavenoteenv{longtable}
+  $endif$     $-- %%% beamer
+$endif$       $-- %%% tables
+$if(graphics)$
+  \usepackage{graphicx}
+  \makeatletter
+  \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+  \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+  \makeatother
+  % Scale images if necessary, so that they will not overflow the page
+  % margins by default, and it is still possible to overwrite the defaults
+  % using explicit options in \includegraphics[width, height, ...]{}
+  \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+  % Set default figure placement to htbp
+  \makeatletter
+  \def\fps@figure{htbp}
+  \makeatother
+$endif$       $-- %%% graphics
+$if(svg)$
+  \usepackage{svg}
+$endif$       $-- %%% svg
+$if(strikeout)$
+  $-- also used for underline
+  \ifLuaTeX
+  ~~\usepackage{luacolor}
+  ~~\usepackage[soul]{lua-ul}
+  \else
+  ~~\usepackage{soul}
+  \fi
+$endif$       $-- %%% strikeout
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+~~\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+$if(numbersections)$
+  \setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
+$else$        $-- %%% numbersections
+  \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+$endif$       $-- %%% numbersections
+$if(subfigure)$
+  \usepackage{subcaption}
+$endif$       $-- %%% subfigure
+$if(beamer)$
+$else$        $-- %%% beamer
+  $if(block-headings)$
+    % Make \paragraph and \subparagraph free-standing
+    \ifx\paragraph\undefined\else
+    ~~\let\oldparagraph\paragraph
+    ~~\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+    \fi
+    \ifx\subparagraph\undefined\else
+    ~~\let\oldsubparagraph\subparagraph
+    ~~\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+    \fi
+  $endif$     $-- %%% block-headings
+$endif$       $-- %%% beamer
+$if(pagestyle)$
+  \pagestyle{$pagestyle$}
+$endif$       $-- %%% pagestyle
+$if(csl-refs)$
+  \newlength{\cslhangindent}
+  \setlength{\cslhangindent}{1.5em}
+  \newlength{\csllabelwidth}
+  \setlength{\csllabelwidth}{3em}
+  \newlength{\cslentryspacingunit} % times entry-spacing
+  \setlength{\cslentryspacingunit}{\parskip}
+  \newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+  ~{% don't indent paragraphs
+  ~~\setlength{\parindent}{0pt}
+  ~~% turn on hanging indent if param 1 is 1
+  ~~\ifodd #1
+  ~~\let\oldpar\par
+  ~~\def\par{\hangindent=\cslhangindent\oldpar}
+  ~~\fi
+  ~~% set entry spacing
+  ~~\setlength{\parskip}{#2\cslentryspacingunit}
+  ~}%
+  ~{}
+  \usepackage{calc}
+  \newcommand{\CSLBlock}[1]{#1\hfill\break}
+  \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+  \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+  \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+$endif$       $-- %%% csl-refs
+$if(lang)$
+  \ifLuaTeX
+  \usepackage[bidi=basic]{babel}
+  \else
+  \usepackage[bidi=default]{babel}
+  \fi
+  $if(babel-lang)$
+    \babelprovide[main,import]{$babel-lang$}
+    $if(mainfont)$
+      \ifPDFTeX
+      \else
+      \babelfont[$babel-lang$]{rm}[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
+      \fi
+    $endif$   $-- %%% mainfont
+  $endif$     $-- %%% babel-lang
+  $for(babel-otherlangs)$
+    \babelprovide[import]{$babel-otherlangs$}
+  $endfor$    $-- %%% babel-otherlangs
+  $for(babelfonts/pairs)$
+    \babelfont[$babelfonts.key$]{rm}{$babelfonts.value$}
+  $endfor$    $-- %%% babelfonts/pairs
+  % get rid of language-specific shorthands (see #6817):
+  \let\LanguageShortHands\languageshorthands
+  \def\languageshorthands#1{}
+$endif$       $-- %%% lang
+$for(header-includes)$
+  $header-includes$
+$endfor$      $-- %%% header-includes
+\ifLuaTeX
+~~\usepackage{selnolig}  % disable illegal ligatures
+\fi
+$if(dir)$
+  \ifPDFTeX
+  ~~\TeXXeTstate=1
+  ~~\newcommand{\RL}[1]{\beginR #1\endR}
+  ~~\newcommand{\LR}[1]{\beginL #1\endL}
+  ~~\newenvironment{RTL}{\beginR}{\endR}
+  ~~\newenvironment{LTR}{\beginL}{\endL}
+  \fi
+$endif$       $-- %%% dir
+$if(natbib)$
+  \usepackage[$natbiboptions$]{natbib}
+  \bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$       $-- %%% natbib
+$if(biblatex)$
+  \usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
+  $for(bibliography)$
+    \addbibresource{$bibliography$}
+  $endfor$    $-- %%% bibliography
+$endif$       $-- %%% biblatex
+$if(nocite-ids)$
+  \nocite{$for(nocite-ids)$$it$$sep$, $endfor$}
+$endif$       $-- %%% nocite-ids
+$if(csquotes)$
+  \usepackage{csquotes}
+$endif$       $-- %%% csquotes
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{$if(urlstyle)$$urlstyle$$else$same$endif$}
+$if(links-as-notes)$
+  % Make links footnotes instead of hotlinks:
+  \DeclareRobustCommand{\href}[2]{#2\footnote{\url{#1}}}
+$endif$       $-- %%% links-as-notes
+$if(verbatim-in-note)$
+  \VerbatimFootnotes % allow verbatim text in footnotes
+$endif$       $-- %%% verbatim-in-note
+\hypersetup{
+$if(title-meta)$
+  ~~pdftitle={$title-meta$},
+$endif$       $-- %%% title-meta
+$if(author-meta)$
+  ~~pdfauthor={$author-meta$},
+$endif$       $-- %%% author-meta
+$if(lang)$
+  ~~pdflang={$lang$},
+$endif$       $-- %%% lang
+$if(subject)$
+  ~~pdfsubject={$subject$},
+$endif$       $-- %%% subject
+$if(keywords)$
+  ~~pdfkeywords={$for(keywords)$$keywords$$sep$, $endfor$},
+$endif$       $-- %%% keywords
+$if(colorlinks)$
+  ~~colorlinks=true,
+  ~~linkcolor={$if(linkcolor)$$linkcolor$$else$Maroon$endif$},
+  ~~filecolor={$if(filecolor)$$filecolor$$else$Maroon$endif$},
+  ~~citecolor={$if(citecolor)$$citecolor$$else$Blue$endif$},
+  ~~urlcolor={$if(urlcolor)$$urlcolor$$else$Blue$endif$},
+$else$        $-- %%% colorlinks
+  $if(boxlinks)$
+  $else$      $-- %%% boxlinks
+    ~~hidelinks,
+  $endif$     $-- %%% boxlinks
+$endif$       $-- %%% colorlinks
+~~pdfcreator={LaTeX via pandoc}}
+
+$if(title)$
+  \title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
+$endif$       $-- %%% title
+$if(subtitle)$
+  $if(beamer)$
+  $else$      $-- %%% beamer
+    \usepackage{etoolbox}
+    \makeatletter
+    \providecommand{\subtitle}[1]{% add subtitle to \maketitle
+    ~~\apptocmd{\@title}{\par {\large #1 \par}}{}{}
+    }
+    \makeatother
+  $endif$     $-- %%% beamer
+  \subtitle{$subtitle$}
+$endif$       $-- %%% subtitle
+\author{$for(author)$$author$$sep$ \and $endfor$}
+\date{$date$}
+$if(beamer)$
+  $if(institute)$
+    \institute{$for(institute)$$institute$$sep$ \and $endfor$}
+  $endif$     $-- %%% institute
+  $if(titlegraphic)$
+    \titlegraphic{\includegraphics{$titlegraphic$}}
+  $endif$     $-- %%% titlegraphic
+  $if(logo)$
+    \logo{\includegraphics{$logo$}}
+  $endif$     $-- %%% logo
+$endif$       $-- %%% beamer
+
+\begin{document}
+$if(has-frontmatter)$
+  \frontmatter
+$endif$       $-- %%% has-frontmatter
+$if(title)$
+  $if(beamer)$
+    \frame{\titlepage}
+  $else$      $-- %%% beamer
+    \maketitle
+  $endif$     $-- %%% beamer
+  $if(abstract)$
+    \begin{abstract}
+    $abstract$
+    \end{abstract}
+  $endif$     $-- %%% abstract
+$endif$       $-- %%% title
+
+$for(include-before)$
+  $include-before$
+  
+$endfor$      $-- %%% include-before
+$if(toc)$
+  $if(toc-title)$
+    \renewcommand*\contentsname{$toc-title$}
+  $endif$     $-- %%% toc-title
+  $if(beamer)$
+    \begin{frame}[allowframebreaks]
+    $if(toc-title)$
+      ~~\frametitle{$toc-title$}
+    $endif$   $-- %%% toc-title
+    ~~\tableofcontents[hideallsubsections]
+    \end{frame}
+  $else$      $-- %%% beamer
+    {
+    $if(colorlinks)$
+      \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
+    $endif$   $-- %%% colorlinks
+    \setcounter{tocdepth}{$toc-depth$}
+    \tableofcontents
+    }
+  $endif$     $-- %%% beamer
+$endif$       $-- %%% toc
+$if(lof)$
+  \listoffigures
+$endif$       $-- %%% lof
+$if(lot)$
+  \listoftables
+$endif$       $-- %%% lot
+$if(linestretch)$
+  \setstretch{$linestretch$}
+$endif$       $-- %%% linestretch
+$if(has-frontmatter)$
+  \mainmatter
+$endif$       $-- %%% has-frontmatter
+$body$
+
+$if(has-frontmatter)$
+  \backmatter
+$endif$       $-- %%% has-frontmatter
+$if(natbib)$
+  $if(bibliography)$
+    $if(biblio-title)$
+      $if(has-chapters)$
+        \renewcommand\bibname{$biblio-title$}
+      $else$  $-- %%% has-chapters
+        \renewcommand\refname{$biblio-title$}
+      $endif$  $-- %%% has-chapters
+    $endif$   $-- %%% biblio-title
+    $if(beamer)$
+      \begin{frame}[allowframebreaks]{$biblio-title$}
+      ~~\bibliographytrue
+    $endif$   $-- %%% beamer
+    ~~\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+    $if(beamer)$
+      \end{frame}
+    $endif$   $-- %%% beamer
+    
+  $endif$     $-- %%% bibliography
+$endif$       $-- %%% natbib
+$if(biblatex)$
+  $if(beamer)$
+    \begin{frame}[allowframebreaks]{$biblio-title$}
+    ~~\bibliographytrue
+    ~~\printbibliography[heading=none]
+    \end{frame}
+  $else$      $-- %%% beamer
+    \printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+  $endif$     $-- %%% beamer
+  
+$endif$       $-- %%% biblatex
+$for(include-after)$
+  $include-after$
+  
+$endfor$      $-- %%% include-after
+\end{document}
+
+$-- CJKmainfont
+$-- abstract
+$-- aspectratio
+$-- author-meta
+$-- babel-lang
+$-- babel-otherlangs
+$-- babelfonts/pairs
+$-- background-image
+$-- beamer
+$-- beamerarticle
+$-- beameroption
+$-- biblatex
+$-- biblio-title
+$-- bibliography
+$-- block-headings
+$-- boxlinks
+$-- classoption
+$-- colorlinks
+$-- colortheme
+$-- csl-refs
+$-- csquotes
+$-- dir
+$-- fontfamilies
+$-- fontfamily
+$-- fontsize
+$-- fonttheme
+$-- geometry
+$-- graphics
+$-- handout
+$-- has-chapters
+$-- has-frontmatter
+$-- header-includes
+$-- highlighting-macros
+$-- include-after
+$-- include-before
+$-- indent
+$-- innertheme
+$-- institute
+$-- keywords
+$-- lang
+$-- lhs
+$-- linestretch
+$-- links-as-notes
+$-- listings
+$-- lof
+$-- logo
+$-- lot
+$-- luatexjapresetoptions
+$-- mainfont
+$-- mathfont
+$-- mathspec
+$-- monofont
+$-- multirow
+$-- natbib
+$-- nocite-ids
+$-- numbersections
+$-- outertheme
+$-- pagestyle
+$-- papersize
+$-- sansfont
+$-- section-titles
+$-- strikeout
+$-- subfigure
+$-- subject
+$-- subtitle
+$-- svg
+$-- tables
+$-- theme
+$-- title
+$-- title-meta
+$-- titlegraphic
+$-- toc
+$-- toc-title
+$-- verbatim-in-note
+$-- zero-width-non-joiner

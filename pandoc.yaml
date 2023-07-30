@@ -1,0 +1,31 @@
+input-files:
+  - src/00-frontmatter.md
+  - src/shims/mainmatter.md
+  - src/01-first-chapter.md
+  - src/02-second-chapter.md
+  - src/shims/references.md
+
+from: markdown+autolink_bare_uris
+standalone: true
+#output-file: main_pandoc.tex
+
+template: deps/template.tex
+
+# for pandoc-crossref
+listings: true
+number-sections: true
+top-level-division: chapter
+
+csl: deps/citation-style.csl
+metadata:
+  bibliography: src/references.bib
+
+filters:
+  - pandoc-crossref
+  # - deps/lua/table-width.lua
+  - deps/lua/rmCiteSpace.lua
+  - citeproc
+  # - deps/lua/denotation.lua
+  # - deps/lua/denotation-item.lua
+  - deps/lua/reference-title.lua
+  - deps/lua/appendix.lua

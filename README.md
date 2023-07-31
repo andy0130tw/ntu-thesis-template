@@ -10,15 +10,15 @@ Organizing this template would not be possible without the following open-source
 
 * [**Pandoc Template for NTU Thesis** by liao961120](https://github.com/liao961120/thesis).
 * [**國立臺灣大學碩博士學位論文 LaTeX 模板** by hsins](https://github.com/Hsins/NTU-Thesis-LaTeX-Template).
-* [**NTU thesis template for XeLaTeX** tzhuan](https://github.com/tzhuan/ntu-thesis).
+* [**NTU thesis template for XeLaTeX** by tzhuan](https://github.com/tzhuan/ntu-thesis).
 
 ## Important files
 
 **The default file**: The YAML file `pandoc.yaml` is called a [default file](https://pandoc.org/MANUAL.html#defaults-files) for Pandoc. Contains all options to pass to Pandoc except the output file name. Edit them to your like.
 
-**Input & Output**: The start of `pandoc.yaml` is the sequence of documents that are going to be fed to Pandoc in order. Do include more files as you write. `src/00-frontmatter.md` contains the metadata for your thesis in YAML format.
+**Input & Output**: The start of `pandoc.yaml` is the sequence of documents that are going to be fed to Pandoc in order. Do include more files as you write. The path of output file, for coherence with LaTeX, is defined in the build script it self.
 
-**Metadata**: The frontmatter contains all metadata you need to configure. Besides some feature switches, Pandoc interpolates these variables to templates.
+**Metadata**: The frontmatter file `src/00-frontmatter.md` contains the metadata for your thesis in YAML format. This file must appear first in your input files. Besides some feature switches, Pandoc interpolates these variables in templates.
 
 **Citations**: Pandoc handles bibliography through its built-in citation processor citeproc. You maintain a list of references in BibTeX format stored in `src/regerences.bib`. A CSL (citation style language) source located at `deps/citation-style.csl` describes how to typeset these references. The one I use is found in [Zotero](https://www.zotero.org/styles) and modified to my personal taste.
 
@@ -50,15 +50,15 @@ Additionally, the base class requires more. They are: `xecjk` `titlesec` `toclof
 
 ## Some neat features
 
-`misc/` contains some files for tweaking the base template. This allows easy diffing/updating the template for future pandoc versions. For example, one can examine all beamer-related parts by finding with some regex like `\$if\(beamer\)\$[\s\S]+?\$endif\$\s+\$-- %%% beamer`.
+The base template for Pandoc is modified from the [official one](https://github.com/jgm/pandoc-templates/blob/master/default.latex) for v3.1.2. `misc/` contains some files for prettyprinting and tweaking the base template. This allows easy diffing/updating the template for future pandoc versions. For example, one can examine all beamer-related parts by finding with some regex like `\$if\(beamer\)\$[\s\S]+?\$endif\$\s+\$-- %%% beamer` after annotating.
 
 ### "口試委員審定書"
 
-If you place a `included-certificate.pdf` at project root, it will be inserted to the thesis in place of the mocked page.
+If you drop a `included-certificate.pdf` at project root, it will be inserted to the thesis in place of the mocked page.
 
 ### Securing your PDF
 
-NTU requires you to submit the owner-password-protected PDF copy. I experimented for a while and pinpointed the specific set of options with `qpdf` that met the requirements of the library. No need of proprietary software like Adobe Acrobat or FoxIt PDF Editor. Try it with `scripts/secure-pdf.sh`.
+NTU requires you to submit the owner-password-protected PDF copy. I experimented for a while and pinpointed the specific set of options with `qpdf` that met the requirements of the library. No need of proprietary software like Adobe Acrobat or FoxIt PDF Editor. Try it out with `scripts/secure-pdf.sh`.
 
 ## FAQs
 

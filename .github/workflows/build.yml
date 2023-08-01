@@ -1,0 +1,72 @@
+name: CI
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies from apt
+        run: |
+          sudo rm -f /var/lib/man-db/auto-update
+          sudo apt update
+          sudo apt install -y git texlive-xetex texlive-lang-chinese fonts-noto-cjk qpdf
+
+      - name: Setup tlmgr (2021 frozen)
+        # https://gist.github.com/andy0130tw/e7f5b3829bf2db38786c32f0d62c2f52
+        # FIXME: ftp.math.utah.edu is not very stable...
+        run: |
+          tlmgr init-usertree
+          tlmgr option repository http://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2021/tlnet-final
+          tlmgr update --self
+          tlmgr install xecjk tools
+
+      - name: Download pandoc
+        id: dl_pandoc
+        uses: robinraju/release-downloader@v1.8
+        with:
+          repository: jgm/pandoc
+          tag: 3.1.2
+          fileName: pandoc-3.1.2-1-amd64.deb
+          token: ${{ secrets.MY_TOKEN }}
+
+      - name: Download pandoc-crossref
+        id: dl_pandoc_crossref
+        uses: robinraju/release-downloader@v1.8
+        with:
+          repository: lierdakil/pandoc-crossref
+          tag: v0.3.16.0
+          fileName: pandoc-crossref-Linux.tar.xz
+          token: ${{ secrets.MY_TOKEN }}
+
+      - name: Download texlogsieve
+        run: git clone https://gitlab.com/lago/texlogsieve.git
+
+      - name: Setup dependencies
+        run: |
+          sudo dpkg -i "${{ fromJson(steps.dl_pandoc.outputs.downloaded_files)[0] }}"
+          tar xf "${{ fromJson(steps.dl_pandoc_crossref.outputs.downloaded_files)[0] }}"
+          mkdir -p deps/bin
+          mv pandoc-crossref deps/bin
+          ln -s $GITHUB_WORKSPACE/texlogsieve/texlogsieve deps/bin
+
+      - name: Check environment
+        run: scripts/check-env.sh
+
+      - name: Build PDF
+        # run twice on purpose!
+        run: |
+          scripts/build-tex.sh
+          scripts/build-tex.sh
+
+      - name: Secure PDF with qpdf
+        run: PASSWORD=ntu-thesis-template scripts/secure-pdf.sh dist/thesis.pdf dist/thesis-prot.pdf
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-dist
+          path: dist

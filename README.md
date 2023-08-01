@@ -1,5 +1,7 @@
 # ntu-thesis-template
 
+[![CI](https://github.com/andy0130tw/ntu-thesis-template/actions/workflows/build.yml/badge.svg?event=push)](https://github.com/andy0130tw/ntu-thesis-template/actions/workflows/build.yml)
+
 This is a refined NTU thesis XeLaTeX template based on former works.
 
 You can write your thesis in a supported markup language you are familar with, and Pandoc takes care of the rest.

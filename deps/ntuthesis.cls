@@ -530,10 +530,10 @@
     Extension=.ttf,
     BoldFont=*-Bold,
     ItalicFont=*-Italic,
-    BoldItalicFont=*-BoldItalic,
-    SmallCapsFont={texgyretermes-regular.otf},
-    BoldFeatures={SmallCapsFont=texgyretermes-bold.otf},
-    SmallCapsFeatures={Scale=MatchUppercase, Letters=SmallCaps}
+    BoldItalicFont=*-BoldItalic%,
+    % SmallCapsFont={texgyretermes-regular.otf},
+    % BoldFeatures={SmallCapsFont=texgyretermes-bold.otf},
+    % SmallCapsFeatures={Scale=MatchUppercase, Letters=SmallCaps}
   ]{TimesNewRoman}
   \setsansfont{Fira Sans}
   \setmonofont[
@@ -549,14 +549,13 @@
     Path=\ntu@path@cjkfont,
     Extension=.ttf,
     AutoFakeBold=3]{BiauKai}
-  \setCJKfallbackfamilyfont{\CJKfamilydefault}[
-    Scale=.92]{Iansui094-Regular}
+  %\setCJKfallbackfamilyfont{\CJKfamilydefault}[
+  %  Scale=.92]{Iansui094-Regular}
 }
 
 \ifthenelse{\equal{\ntu@fontset}{system}}{
-  \setmainfont[AutoFakeSlant=.4]{Comic Sans MS}
-  \setCJKmainfont[
-    AutoFakeBold=3]{BiauKai}
+  \IfFontExistsTF{Liberation Serif}{\setmainfont{Liberation Serif}}{}
+  \IfFontExistsTF{Noto Sans CJK TC}{\setCJKmainfont{Noto Sans CJK TC}}{}
   \setmonofont[
     Path=\ntu@path@font,
     Extension=.ttf,

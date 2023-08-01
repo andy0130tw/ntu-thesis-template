@@ -6,12 +6,11 @@ source scripts/setup-env.sh
 
 pushd $PROJECT_PATH > /dev/null
 
-LATEX_OUTPUT_PATH=dist/main_pandoc.tex
+LATEX_OUTPUT_PATH=dist/thesis_pandoc.tex
 
 # Build LaTeX
 mkdir -p dist
-pandoc --defaults pandoc --output $LATEX_OUTPUT_PATH |
-  if [ -n "$(command -v latex-log-sieve)" ]; then texlogsieve; else cat; fi
+pandoc --defaults pandoc --output $LATEX_OUTPUT_PATH
 
 function clean_up {
   popd > /dev/null
@@ -27,7 +26,8 @@ function clean_up {
 trap clean_up SIGINT SIGTERM
 
 # If built standalone, use this:
-xelatex --jobname=dist/thesis --halt-on-error -interaction=nonstopmode $LATEX_OUTPUT_PATH &
+xelatex --jobname=dist/thesis --halt-on-error -interaction=nonstopmode $LATEX_OUTPUT_PATH |
+  if [ -n "$(command -v texlogsieve)" ]; then texlogsieve; else cat; fi &
 LATEX_PID=$!
 wait $LATEX_PID
 popd > /dev/null

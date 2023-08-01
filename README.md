@@ -12,6 +12,38 @@ Organizing this template would not be possible without the following open-source
 * [**國立臺灣大學碩博士學位論文 LaTeX 模板** by hsins](https://github.com/Hsins/NTU-Thesis-LaTeX-Template).
 * [**NTU thesis template for XeLaTeX** by tzhuan](https://github.com/tzhuan/ntu-thesis).
 
+## Dependencies
+
+I authored my thesis on both Ubuntu 22.04 and macOS. Does not work on Windows. Haven't tested on other environment.
+
+1. [Pandoc](https://pandoc.org/). At least v3.1.2.
+2. [pandoc-crossref](https://lierdakil.github.io/pandoc-crossref/). Pick a compatible release according to the version of your pandoc.
+3. XeLaTeX. Usually the most frustrating one to make it work.
+4. All LaTeX packages to typeset a LaTeX source. See below.
+5. Additional font files. Place them in `fonts/` to be searched, and adjust the class file accordingly. NTU [suggests](https://web.lib.ntu.edu.tw/question//node/619) BiauKai (標楷體) and Times New Roman. **You need specify a valid CJK font if your document contains CJK glyph!**
+6. (Optional) Some TeX log parser will greatly improve your experience with LaTeX, preferably a streaming one. I personally suggest [texlogsieve](https://gitlab.com/lago/texlogsieve). The default build script will pipe to it whenever available.
+
+### Check your environment
+
+There is a script `scripts/check-env.sh` to quickly test whether you have all software installed or not. If you are reluctant to copy files around, you can create a directory `deps/bin` and it will be prepended to PATH automatically. For example,
+
+```bash
+mkdir deps/bin
+ln -s ~/texlogsieve/texlogsieve deps/bin/texlogsieve
+# now texlogsieve is available; to test it:
+scripts/check-env.sh
+```
+
+More examples are given in the GitHub Actions file.
+
+### LaTeX packages
+
+A full XeLaTeX installation often includes all packages (thus very huge). Otherwise, in TeX Live, use `tlmgr`. For the list of packages, consult [the manual of Pandoc](https://pandoc.org/MANUAL.html#creating-a-pdf).
+
+With a little bit of patience, the most classic way to test this is to compile the project and see what it complains. Install the missing package. Rinse and repeat.
+
+Additionally, the base class requires more. They are: `xecjk` `titlesec` `tocloft` `multirow` `diagbox` `pict2e` `datetime` `fmtcount` `paralist` `subfig`. Not comma-separated so you can copy and paste to compose an install command. Please forgive me if I miss something -- It is extremely hard to keep this list up-to-date.
+
 ## Important files
 
 **The default file**: The YAML file `pandoc.yaml` is called a [default file](https://pandoc.org/MANUAL.html#defaults-files) for Pandoc. Contains all options to pass to Pandoc except the output file name. Edit them to your like.
@@ -31,28 +63,11 @@ Organizing this template would not be possible without the following open-source
 * `deps/seal.pdf`: The high-quality watermark originally included in hsins' repository. I made a faint version in `deps/seal-semitrans.pdf` for direct inclusion.
 * `deps/lua/*.lua`: Some Lua scripts for extending pandoc. I use them sparingly. They are referenced in the default file.
 
-## Dependencies
-
-1. [Pandoc](https://pandoc.org/). At least v3.1.2.
-2. [pandoc-crossref](https://lierdakil.github.io/pandoc-crossref/). Pick a compatible release according to the version of your pandoc.
-3. XeLaTeX. Usually the most frustrating one to make it work.
-4. All LaTeX packages to typeset a LaTeX source. See below.
-5. Additional font files. Place them in `fonts/` to be searched, and adjust the class file accordingly. NTU [suggests](https://web.lib.ntu.edu.tw/question//node/619) BiauKai and Times New Roman.
-6. Optional. Some TeX log parser will greatly improve your experience with LaTeX, preferably a streaming one. I personally suggest [texlogsieve](https://gitlab.com/lago/texlogsieve). You can add it to PATH and pipe the log output to it.
-
-### LaTeX packages
-
-A full XeLaTeX installation often includes all packages (thus very huge). Otherwise, in TeX Live, use `tlmgr`. For the list of packages, consult [the manual of Pandoc](https://pandoc.org/MANUAL.html#creating-a-pdf).
-
-With a little bit of patience, the most classic way to test this is to compile the project and see what it complains. Install the missing package. Rinse and repeat.
-
-Additionally, the base class requires more. They are: `xecjk` `titlesec` `tocloft` `multirow` `diagbox` `pict2e` `datetime` `fmtcount` `paralist` `subfig`. Not comma-separated so you can copy and paste to compose an install command.
-
 ## Some neat features
 
 The base template for Pandoc is modified from the [official one](https://github.com/jgm/pandoc-templates/blob/master/default.latex) for v3.1.2. `misc/` contains some files for prettyprinting and tweaking the base template. This allows easy diffing/updating the template for future pandoc versions. For example, one can examine all beamer-related parts by finding with some regex like `\$if\(beamer\)\$[\s\S]+?\$endif\$\s+\$-- %%% beamer` after annotating.
 
-### "口試委員審定書"
+### Include the certificate ("口試委員審定書")
 
 If you drop a `included-certificate.pdf` at project root, it will be inserted to the thesis in place of the mocked page.
 

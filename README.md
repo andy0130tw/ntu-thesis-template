@@ -31,7 +31,7 @@ Organizing this template would not be possible without the following open-source
 * *Automatic bibliography management.* **「自動管理參考文獻」** \
   Bibliographies are consumed in a plain-text BibTeX format, and can be referenced in text. This proposes a workflow that can be tightly integrated with most citation management software.
 * *Readable comments.* **「清晰易懂的註解」** \
-  The author does fix terms from former works so that they fit into the IT culture in Taiwan [<img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Proposed_flag_of_Taiwan_the_Formosa.svg" alt="Taiwan the Formosa" width="30">](https://commons.wikimedia.org/wiki/File:Proposed_flag_of_Taiwan_the_Formosa.svg).
+  The author does fix terms from former works so that they fit into the IT culture in Taiwan <img src="https://gist.github.com/andy0130tw/fa311e94a58bacf0d642759dd796db58/raw/02b91710e17e4936071443a171bcd4db9fb68674/%25E5%258F%25B0%25E5%25AD%2597%25E7%25BF%25A0%25E9%259D%2592%25E6%2597%2597.svg" width="30">
 
 ## Dependencies
 
